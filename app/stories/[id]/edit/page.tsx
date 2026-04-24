@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import type { Story } from "@/lib/types";
 
-export default function EditStoryPage() {
+function EditStoryInner() {
   const params = useParams();
   const id = params?.id as string;
   const { user, loading: authLoading } = useAuth();
@@ -56,46 +56,48 @@ export default function EditStoryPage() {
 
   if (authLoading || loading) {
     return (
-      <AuthProvider>
-        <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
-          <Header />
-          <main className="flex-1 flex items-center justify-center">
-            <div className="text-[13px] text-[#888]">Завантаження...</div>
-          </main>
-          <Footer />
-        </div>
-      </AuthProvider>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-[13px] text-[#888]">Завантаження...</div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   if (error) {
     return (
-      <AuthProvider>
-        <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
-          <Header />
-          <main className="flex-1 flex items-center justify-center flex-col gap-4">
-            <div className="text-[13px] text-[#E5484D]">{error}</div>
-            <Link href="/dashboard" className="rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2">
-              До кабінету
-            </Link>
-          </main>
-          <Footer />
-        </div>
-      </AuthProvider>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+        <Header />
+        <main className="flex-1 flex items-center justify-center flex-col gap-4">
+          <div className="text-[13px] text-[#E5484D]">{error}</div>
+          <Link href="/dashboard" className="rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2">
+            До кабінету
+          </Link>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   if (!story) return null;
 
   return (
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+      <Header />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <StoryForm story={story} />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+export default function EditStoryPage() {
+  return (
     <AuthProvider>
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
-        <Header />
-        <main className="flex-1 container mx-auto px-4 py-8">
-          <StoryForm story={story} />
-        </main>
-        <Footer />
-      </div>
+      <EditStoryInner />
     </AuthProvider>
   );
 }

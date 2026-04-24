@@ -11,7 +11,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import type { Story } from "@/lib/types";
 
-export default function StoryPage() {
+function StoryPageInner() {
   const params = useParams();
   const id = params?.id as string;
   const supabase = createClient();
@@ -72,13 +72,19 @@ export default function StoryPage() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
-      <AuthProvider>
-        <Header />
-        <main className="flex-1 container mx-auto px-4 py-8">
-          <StoryView story={story} authorName={authorName} />
-        </main>
-        <Footer />
-      </AuthProvider>
+      <Header />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <StoryView story={story} authorName={authorName} />
+      </main>
+      <Footer />
     </div>
+  );
+}
+
+export default function StoryPage() {
+  return (
+    <AuthProvider>
+      <StoryPageInner />
+    </AuthProvider>
   );
 }
