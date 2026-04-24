@@ -39,7 +39,8 @@ export default function EditStoryPage() {
     }
 
     if (!user || data.user_id !== user.id) {
-      router.push("/auth");
+      setError("Немає доступу");
+      setLoading(false);
       return;
     }
 

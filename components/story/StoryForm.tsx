@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useRouter } from "next/navigation";
 import { Save, Send, ImagePlus, X } from "lucide-react";
 import type { Story } from "@/lib/types";
+import Link from "next/link";
 
 type Props = {
   story?: Story;
@@ -16,7 +17,7 @@ type Props = {
 const supabase = createClient();
 
 export default function StoryForm({ story, onDone }: Props) {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [title, setTitle] = useState(story?.title ?? "");
   const [content, setContent] = useState(story?.content ?? "");
@@ -98,9 +99,17 @@ export default function StoryForm({ story, onDone }: Props) {
     router.push("/dashboard");
   };
 
+  if (authLoading) return null;
+
   if (!user) {
-    router.push("/auth");
-    return null;
+    return (
+      <div className="rounded-[8px] border border-[#2a2a2a] bg-[#1e1e1e] p-6 max-w-[700px] mx-auto text-center">
+        <p className="text-[13px] text-[#888] mb-4">Увійдіть, щоб створити історію</p>
+        <Link href="/auth" className="rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2 hover:opacity-90">
+          Увійти
+        </Link>
+      </div>
+    );
   }
 
   return (
