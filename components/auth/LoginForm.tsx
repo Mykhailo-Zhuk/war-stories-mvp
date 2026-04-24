@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { LogIn } from "lucide-react";
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
@@ -10,6 +11,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -25,6 +27,9 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
     if (authError) {
       setError(authError.message);
       setLoading(false);
+    } else {
+      router.push("/");
+      router.refresh();
     }
   };
 
