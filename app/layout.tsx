@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   description: "Платформа для написання, перегляду та зберігання історій та листів про війну",
   keywords: "війна, історії, листи, Україна, спогади, ветеран",
   authors: [{ name: "Mykhailo Zhuk" }],
-  creator: "OpenClaw AI Assistant",
+  creator: "Mykhailo Zhuk",
 }
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#1a1a1a",
+  themeColor: "#111",
 }
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="uk" className="dark">
-      <body className={`${inter.className} min-h-screen bg-zhuk-bg-primary text-zhuk-text-primary`}>
+      <body className={inter.className}>
         {children}
       </body>
     </html>
