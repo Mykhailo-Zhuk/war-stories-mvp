@@ -2,11 +2,13 @@
 "use client";
 
 import { useState } from "react";
-import { ScrollText, User, Menu, X } from "lucide-react";
+import { ScrollText, User, Menu, X, LogOut } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <header className="border-b border-[#2a2a2a]">
@@ -29,9 +31,21 @@ export default function Header() {
           <Link href="/dashboard" className="flex items-center gap-1.5 hover:text-white transition-colors">
             <User className="w-3.5 h-3.5" /> Кабінет
           </Link>
-          <Link href="/auth" className="rounded-[6px] bg-[#1f6feb] text-white px-3 py-1.5 hover:opacity-90 text-[12px]">
-            Увійти
-          </Link>
+          {user ? (
+            <button
+              onClick={() => signOut()}
+              className="flex items-center gap-1.5 hover:text-white transition-colors"
+            >
+              <LogOut className="w-3.5 h-3.5" /> Вийти
+            </button>
+          ) : (
+            <Link
+              href="/auth"
+              className="rounded-[6px] bg-[#1f6feb] text-white px-3 py-1.5 hover:opacity-90 text-[12px]"
+            >
+              Увійти
+            </Link>
+          )}
         </nav>
 
         {/* Mobile menu button */}
@@ -46,18 +60,25 @@ export default function Header() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden border-t border-[#2a2a2a] px-4 py-3 space-y-3">
-          <Link href="/" className="block text-[13px] text-[#888] hover:text-white" onClick={() => setMenuOpen(false)}>
-            Стрічка
-          </Link>
-          <Link href="/stories/new" className="block text-[13px] text-[#888] hover:text-white" onClick={() => setMenuOpen(false)}>
-            Написати історію
-          </Link>
-          <Link href="/dashboard" className="block text-[13px] text-[#888] hover:text-white" onClick={() => setMenuOpen(false)}>
-            Кабінет
-          </Link>
-          <Link href="/auth" className="block rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2 text-center" onClick={() => setMenuOpen(false)}>
-            Увійти
-          </Link>
+          <Link href="/" className="block text-[13px] text-[#888] hover:text-white" onClick={() => setMenuOpen(false)}>Стрічка</Link>
+          <Link href="/stories/new" className="block text-[13px] text-[#888] hover:text-white" onClick={() => setMenuOpen(false)}>Написати історію</Link>
+          <Link href="/dashboard" className="block text-[13px] text-[#888] hover:text-white" onClick={() => setMenuOpen(false)}>Кабінет</Link>
+          {user ? (
+            <button
+              onClick={() => { signOut(); setMenuOpen(false); }}
+              className="block text-[13px] text-[#E5484D] hover:text-white"
+            >
+              Вийти
+            </button>
+          ) : (
+            <Link
+              href="/auth"
+              className="block rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2 text-center"
+              onClick={() => setMenuOpen(false)}
+            >
+              Увійти
+            </Link>
+          )}
         </div>
       )}
     </header>

@@ -1,17 +1,17 @@
 // 🎨 Story Detail Page
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StoryView from "@/components/story/StoryView";
-import { useParams } from "next/navigation";
+import Link from "next/link";
 import type { Story } from "@/lib/types";
 
-export default function StoryPage() {
-  const { id } = useParams();
+export default function StoryPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const supabase = createClient();
   const [story, setStory] = useState<Story | null>(null);
   const [authorName, setAuthorName] = useState("");
@@ -42,15 +42,30 @@ export default function StoryPage() {
   }
 
   if (loading) {
-    return <div className="min-h-screen bg-[#111] flex items-center justify-center">
-      <div className="text-[13px] text-[#888]">Завантаження...</div>
-    </div>;
+    return (
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-[13px] text-[#888]">Завантаження...</div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   if (error || !story) {
-    return <div className="min-h-screen bg-[#111] flex items-center justify-center">
-      <div className="text-[13px] text-[#E5484D]">{error || "Історія не знайдена"}</div>
-    </div>;
+    return (
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+        <Header />
+        <main className="flex-1 flex items-center justify-center flex-col gap-4">
+          <div className="text-[13px] text-[#E5484D]">{error || "Історія не знайдена"}</div>
+          <Link href="/" className="rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2">
+            До стрічки
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   return (
