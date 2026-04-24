@@ -1,17 +1,19 @@
 // 🎨 Story Detail Page
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StoryView from "@/components/story/StoryView";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import type { Story } from "@/lib/types";
 
-export default function StoryPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function StoryPage() {
+  const params = useParams();
+  const id = params?.id as string;
   const supabase = createClient();
   const [story, setStory] = useState<Story | null>(null);
   const [authorName, setAuthorName] = useState("");

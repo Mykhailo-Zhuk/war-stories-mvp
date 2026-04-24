@@ -1,17 +1,19 @@
 // 🎨 Edit Story
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { AuthProvider, useAuth } from "@/components/auth/AuthProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StoryForm from "@/components/story/StoryForm";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import type { Story } from "@/lib/types";
 
-export default function EditStoryPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function EditStoryPage() {
+  const params = useParams();
+  const id = params?.id as string;
   const { user, loading: authLoading } = useAuth();
   const supabase = createClient();
   const [story, setStory] = useState<Story | null>(null);
@@ -54,40 +56,46 @@ export default function EditStoryPage({ params }: { params: Promise<{ id: string
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-[13px] text-[#888]">Завантаження...</div>
-        </main>
-        <Footer />
-      </div>
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+          <Header />
+          <main className="flex-1 flex items-center justify-center">
+            <div className="text-[13px] text-[#888]">Завантаження...</div>
+          </main>
+          <Footer />
+        </div>
+      </AuthProvider>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
-        <Header />
-        <main className="flex-1 flex items-center justify-center flex-col gap-4">
-          <div className="text-[13px] text-[#E5484D]">{error}</div>
-          <Link href="/dashboard" className="rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2">
-            До кабінету
-          </Link>
-        </main>
-        <Footer />
-      </div>
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+          <Header />
+          <main className="flex-1 flex items-center justify-center flex-col gap-4">
+            <div className="text-[13px] text-[#E5484D]">{error}</div>
+            <Link href="/dashboard" className="rounded-[6px] bg-[#1f6feb] text-white text-[13px] px-4 py-2">
+              До кабінету
+            </Link>
+          </main>
+          <Footer />
+        </div>
+      </AuthProvider>
     );
   }
 
   if (!story) return null;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <StoryForm story={story} />
-      </main>
-      <Footer />
-    </div>
+    <AuthProvider>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#111" }}>
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <StoryForm story={story} />
+        </main>
+        <Footer />
+      </div>
+    </AuthProvider>
   );
 }
